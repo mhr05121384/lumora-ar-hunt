@@ -1,48 +1,36 @@
 # Lumora · لومورا
 
-A Persian, mobile-friendly creature-catching browser game with six original guardians and camera-based AR.
+Persian creature-catching web game with a world-space WebXR combat mode.
 
-## بازی
+Play: https://mhr05121384.github.io/lumora-ar-hunt/
 
-در بیشهٔ زمرد دنبال نگهبانان نور بگرد، گوی شکار را به بالا بکش و مجموعه‌ات را تکامل بده. با ۳ شکار، تالاب مهتاب و با ۶ شکار، درهٔ سپیده باز می‌شود.
+## Version 4: spatial hunt
 
-- Six original animated creatures, including rare and legendary guardians.
-- Timed capture rings, swipe throws, light lures and capture effects.
-- Collection, evolution, XP, levels, quests and rewards.
-- Three illustrated biomes and a no-camera mode.
-- Persian RTL interface, responsive layout, sound and haptic feedback.
-- Progress stored locally in the browser with `localStorage`.
+- 24 procedural animated 3D creatures per wave, six species, 2–5 hit points.
+- Creatures walk within a detected horizontal plane polygon when available, or a bounded 0.85 m radius floor arena.
+- Hit-test placement requires 18 stable frames; world transforms are independent of camera orientation. Optional XR anchors refine the fixed placement.
+- Tracking loss hides and pauses creatures. Reference-space reset without an anchor requires fresh placement.
+- Center-screen raycast shooting, flight response after hits, weapon heat/cooldown, next waves and saved collection rewards.
+- Optional CPU depth sensing masks virtual creatures behind real foreground surfaces and blocks shots through those surfaces. Missing sensor data is clearly indicated and never simulated.
+- Standalone 3D practice arena for WebGL browsers without immersive AR. Practice is explicitly not world-tracked.
+- Original 2D collection, evolution and biome game remains available.
 
-## Camera AR
+## Start
 
-Select **فعال‌سازی AR** and allow the camera. Use HTTPS (or localhost). A rear-facing mobile camera is preferred. Where available and permitted, device orientation moves the creature on screen.
+Serve these static files over HTTPS, or localhost for development. Open **ورود به AR فضایی**, grant AR permission, scan a well-lit textured floor, wait for the green placement ring, and press the placement button. Aim the center reticle and press **شلیک نور**.
 
-This version renders articulated 3D guardians with Three.js. On immersive-AR compatible devices, WebXR hit testing places the walking guardian on a detected surface. Other devices use a camera-overlay fallback. It does not use GPS spawning or a real-world map. Physical WebXR surface placement still requires on-device validation. The radar and weather are decorative game elements. Camera video is not recorded or uploaded. Physical mobile camera behavior has not yet been verified on-device. Stand in a safe place while playing.
+Immersive AR requires WebXR hit-test and DOM overlay support. Anchors, plane detection and CPU depth are optional device/browser capabilities; there is no guarantee that every phone exposes them. Depth sensing does not provide full room navigation or obstacle avoidance: creatures stay on the selected floor region, but do not plan routes around furniture. World tracking may drift in poor lighting or textureless spaces. Session placement is not persisted across sessions. Camera/depth data are processed locally; no frames are uploaded.
 
-## Run locally
-
-No build tools or package installation are required:
-
-```sh
-python3 -m http.server 8080
-```
-
-Open `http://localhost:8080`. Camera access from a phone over a LAN generally requires HTTPS.
-
-## Deploy with GitHub Pages
-
-In **Settings → Pages**, select **Deploy from a branch**, branch **main**, folder **/ (root)**. Save and wait for deployment.
-
-## Files
-
-| File | Purpose |
-| --- | --- |
-| `index.html` | Game interface and dialogs |
-| `style.css` | Responsive Persian RTL layout |
-| `game.js` | Canvas artwork, gameplay, persistence, camera and audio |
-
-The game uses vanilla JavaScript, Canvas 2D backgrounds and procedural Three.js models. Three.js 0.170.0 loads from jsDelivr. The optional Vazirmatn font is fetched from Google Fonts, with local font fallbacks.
+Three.js 0.170.0 is loaded from jsDelivr. Network access is required for that module. Progress is stored in localStorage in the current browser.
 
 ## Validation
 
-JavaScript syntax validation passed. Capture, inventory, rewards, persistence and drawing logic were checked with a Node simulation. Browser checks covered onboarding, successful capture, collection display, insufficient evolution currency and locked biome controls.
+Run `node --test arena-core.test.mjs` for floor-boundary simulation with 24 creatures, stable placement gating, damage/death behavior and depth-aware hit blocking. JavaScript syntax checks also pass. The cloud preview browser disables WebGL, so rendering, depth alignment and physical camera motion have **not** been verified on an AR-capable phone. These require on-device validation.
+
+Manual device checks: place a wave, rotate 90 degrees and return; walk slowly around the arena; obscure a creature with a real object while depth is active; interrupt tracking and recover; finish all creatures and start another wave; exit and re-enter AR.
+
+API references: [WebXR depth sensing](https://immersive-web.github.io/depth-sensing/), [hit-test anchors](https://developer.mozilla.org/en-US/docs/Web/API/XRHitTestResult/createAnchor).
+
+## Deploy
+
+GitHub Pages serves the repository root from `main`. No build step, credentials or server required.
