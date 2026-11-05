@@ -38,3 +38,7 @@ GitHub Pages serves the repository root from `main`. No build step, credentials 
 ## Version 5: scan freeze fix
 
 Fixed an engine/application depth-mode mismatch which could throw before the first application XR frame. CPU depth buffers are read only after placement, bounded to 1M pixels and isolated from the main loop. A frame watchdog reports FRAME_TIMEOUT after 8 seconds of a visible session without frames; application exceptions end AR with a visible code. Null hit poses are ignored. Physical-device reproduction remains unverified.
+
+## Version 6: child-friendly waves
+
+The home screen has two play actions and optional collection/help icons. During play, only wave, clock/energy, remaining creatures, aiming and shoot controls are shown. Technical sensor labels are hidden. Wave 1 lasts 100 seconds; each wave reduces the limit by 5 seconds (minimum 35), raises movement speed by 10% of base speed, and every third advancement adds one hit point. Hearts show remaining time in thirds. Reaching zero loses the round; retry resets to wave 1 while keeping collected rewards. Completing a wave stops the clock and unlocks the next one. Tracking loss or a hidden page pauses the clock. Tests cover escalation, timeout, terminal states and pause behavior. Hardware AR rendering remains unverified in the cloud environment.

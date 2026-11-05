@@ -5,3 +5,6 @@ export function stepEnemy(e,dt,arena){dt=Math.min(.05,Math.max(0,dt));if(e.dead)
 export function blockedByDepth(targetZ,realDepth){return Number.isFinite(realDepth)&&realDepth>0&&targetZ>realDepth+.06}
 export function damageEnemy(e){if(e.dead)return false;e.hp--;e.flash=.12;e.flee=1.4;e.angle+=1.1;if(e.hp<=0){e.dead=true;return true}return false}
 export function stableSurface(history,p){history.push(p);if(history.length>18)history.shift();if(history.length<18)return false;return history.every(q=>Math.hypot(q.x-p.x,q.y-p.y,q.z-p.z)<.035)}
+// Every wave gets faster and a shorter clock; later waves add armour.
+export function waveRules(wave){const n=Math.max(1,Math.floor(wave));return {seconds:Math.max(35,100-5*(n-1)),speed:1+.1*(n-1),extraHP:Math.floor((n-1)/3)}}
+export function advanceRound(round,dt,running){if(!running||round.state!=='playing')return;round.remaining=Math.max(0,round.remaining-Math.max(0,dt));if(round.remaining===0)round.state='lost'}
