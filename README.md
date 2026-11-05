@@ -17,7 +17,7 @@ A Persian, mobile-friendly creature-catching browser game with six original guar
 
 Select **فعال‌سازی AR** and allow the camera. Use HTTPS (or localhost). A rear-facing mobile camera is preferred. Where available and permitted, device orientation moves the creature on screen.
 
-This version overlays illustrated creatures on live video; it does **not** use WebXR surface tracking, spatial anchors, GPS spawning or a real-world map. The radar and weather are decorative game elements. Camera video is not recorded or uploaded. Physical mobile camera behavior has not yet been verified on-device. Stand in a safe place while playing.
+This version renders articulated 3D guardians with Three.js. On immersive-AR compatible devices, WebXR hit testing places the walking guardian on a detected surface. Other devices use a camera-overlay fallback. It does not use GPS spawning or a real-world map. Physical WebXR surface placement still requires on-device validation. The radar and weather are decorative game elements. Camera video is not recorded or uploaded. Physical mobile camera behavior has not yet been verified on-device. Stand in a safe place while playing.
 
 ## Run locally
 
@@ -41,7 +41,7 @@ In **Settings → Pages**, select **Deploy from a branch**, branch **main**, fol
 | `style.css` | Responsive Persian RTL layout |
 | `game.js` | Canvas artwork, gameplay, persistence, camera and audio |
 
-The game is written in vanilla JavaScript with Canvas 2D. Artwork is drawn in code; there are no image assets or runtime JavaScript dependencies. The optional Vazirmatn font is fetched from Google Fonts, with local font fallbacks.
+The game uses vanilla JavaScript, Canvas 2D backgrounds and procedural Three.js models. Three.js 0.170.0 loads from jsDelivr. The optional Vazirmatn font is fetched from Google Fonts, with local font fallbacks.
 
 ## Validation
 
