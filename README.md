@@ -21,7 +21,7 @@ Serve these static files over HTTPS, or localhost for development. Open **ورو
 
 Immersive AR requires WebXR hit-test and DOM overlay support. Anchors, plane detection and CPU depth are optional device/browser capabilities; there is no guarantee that every phone exposes them. Depth sensing does not provide full room navigation or obstacle avoidance: creatures stay on the selected floor region, but do not plan routes around furniture. World tracking may drift in poor lighting or textureless spaces. Session placement is not persisted across sessions. Camera/depth data are processed locally; no frames are uploaded.
 
-Three.js 0.170.0 is loaded from jsDelivr. Network access is required for that module. Progress is stored in localStorage in the current browser.
+Three.js 0.170.0 is vendored locally under the MIT license. The WebXRManager GPU depth path is gated on `session.depthUsage === "gpu-optimized"` and an available binding, so CPU depth sessions reach the application frame callback. Progress is stored in localStorage in the current browser.
 
 ## Validation
 
@@ -34,3 +34,7 @@ API references: [WebXR depth sensing](https://immersive-web.github.io/depth-sens
 ## Deploy
 
 GitHub Pages serves the repository root from `main`. No build step, credentials or server required.
+
+## Version 5: scan freeze fix
+
+Fixed an engine/application depth-mode mismatch which could throw before the first application XR frame. CPU depth buffers are read only after placement, bounded to 1M pixels and isolated from the main loop. A frame watchdog reports FRAME_TIMEOUT after 8 seconds of a visible session without frames; application exceptions end AR with a visible code. Null hit poses are ignored. Physical-device reproduction remains unverified.

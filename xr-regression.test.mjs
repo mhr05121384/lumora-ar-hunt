@@ -1,0 +1,13 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+const engine=readFileSync(new URL('./three.module.js',import.meta.url),'utf8');
+const start=engine.indexOf('const enabledFeatures = session.enabledFeatures;');
+const end=engine.indexOf('\n\t\t\t}\n',start);
+assert.ok(start>0&&end>start);
+const path=engine.slice(start,end);
+const run=new Function('session','glBinding','views','depthSensing','renderer',path);
+test('CPU session reaches app without calling incompatible GPU depth API',()=>{let calls=0;run({enabledFeatures:['depth-sensing'],depthUsage:'cpu-optimized'},{getDepthInformation(){calls++;throw new Error('InvalidStateError')}},[{}],{},{});assert.equal(calls,0)});
+test('missing XRWebGLBinding does not crash a depth-enabled frame',()=>{assert.doesNotThrow(()=>run({enabledFeatures:['depth-sensing'],depthUsage:'cpu-optimized'},null,[{}],{},{}));assert.doesNotThrow(()=>run({enabledFeatures:['depth-sensing'],depthUsage:'gpu-optimized'},null,[{}],{},{}))});
+test('GPU depth path remains available for GPU sessions',()=>{let initialized=false;run({enabledFeatures:['depth-sensing'],depthUsage:'gpu-optimized'},{getDepthInformation(){return {isValid:true,texture:{}}}},[{}],{init(){initialized=true}},{});assert.equal(initialized,true)});
+test('regression fixture reproduces original first-frame exception',()=>{const old=path.replace(" && session.depthUsage === 'gpu-optimized' && glBinding",'');const runOld=new Function('session','glBinding','views','depthSensing','renderer',old);assert.throws(()=>runOld({enabledFeatures:['depth-sensing'],depthUsage:'cpu-optimized'},null,[{}],{},{}),TypeError)});
