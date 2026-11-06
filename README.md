@@ -42,3 +42,9 @@ Fixed an engine/application depth-mode mismatch which could throw before the fir
 ## Version 6: child-friendly waves
 
 The home screen has two play actions and optional collection/help icons. During play, only wave, clock/energy, remaining creatures, aiming and shoot controls are shown. Technical sensor labels are hidden. Wave 1 lasts 100 seconds; each wave reduces the limit by 5 seconds (minimum 35), raises movement speed by 10% of base speed, and every third advancement adds one hit point. Hearts show remaining time in thirds. Reaching zero loses the round; retry resets to wave 1 while keeping collected rewards. Completing a wave stops the clock and unlocks the next one. Tracking loss or a hidden page pauses the clock. Tests cover escalation, timeout, terminal states and pause behavior. Hardware AR rendering remains unverified in the cloud environment.
+
+## Version 7: compatibility modes and raised platforms
+
+Manual camera mode uses two screen taps to mark a rectangle. It is a 2D camera overlay, requires a stationary phone, and does not infer real depth or recognize furniture. Rotation requires marking again. Camera-free mode uses 3D when WebGL initializes, otherwise a Canvas 2D timed hunt remains playable. Modern JavaScript/Canvas support is required; universal browser support is not guaranteed.
+
+Immersive AR collects horizontal planes 0.15–1.5m above the floor and within 3m, observed at least three times. Creatures hop to plane centers, briefly walk there, then return. This is an experimental platform animation, not semantic furniture recognition or collision-safe navigation. Physical-device validation is outstanding.
